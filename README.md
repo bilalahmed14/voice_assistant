@@ -1,57 +1,43 @@
-# Voice Cloning MCP Server
+# Voice-Based AI Agent with RAG
 
-A voice cloning system that allows users to clone voices and generate speech using the cloned voices through an MCP (Media Control Protocol) server.
+This project demonstrates a voice-based AI agent that can answer questions based on a provided knowledge base using Retrieval-Augmented Generation (RAG).
 
 ## Features
 
-- Voice enrollment and model creation
-- Text-to-Speech with cloned voices
-- MCP server integration
-- Voice model management
+- Voice input (Speech-to-Text)
+- Knowledge base integration with vector embeddings
+- RAG-based question answering
+- Voice output (Text-to-Speech)
+- Modern web interface
 
 ## Setup
 
-1. Create a virtual environment:
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
-
+1. Clone this repository
 2. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
-
-3. Install additional system dependencies:
-- FFmpeg
-- PortAudio
-
-## Project Structure
-
-```
-voice_cloning/
-├── src/
-│   ├── core/           # Core voice cloning functionality
-│   ├── mcp/            # MCP server implementation
-│   ├── tools/          # MCP tools (Voice Enrollment, TTS)
-│   └── utils/          # Utility functions
-├── models/             # Pre-trained models and voice models
-├── tests/              # Test files
-└── docs/               # Documentation
-```
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. Create a `.env` file with your OpenAI API key:
+   ```
+   OPENAI_API_KEY=your_api_key_here
+   ```
+4. Place your knowledge base documents in the `knowledge_base` directory
+5. Run the application:
+   ```bash
+   python app.py
+   ```
 
 ## Usage
 
-1. Start the MCP server:
-```bash
-python src/mcp/server.py
-```
+1. Open your web browser and navigate to `http://localhost:5000`
+2. Click the microphone button to start recording your question
+3. Wait for the system to process your question and provide a voice response
+4. The transcribed question and answer will be displayed on the screen
 
-2. Use the MCP client to interact with the server:
-```bash
-python src/mcp/client.py
-```
+## Project Structure
 
-## License
-
-MIT License 
+- `app.py`: Main Flask application
+- `knowledge_base/`: Directory for knowledge base documents
+- `static/`: Static files (CSS, JavaScript)
+- `templates/`: HTML templates
+- `utils/`: Utility functions for RAG, STT, and TTS 
