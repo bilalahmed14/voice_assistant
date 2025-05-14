@@ -5,61 +5,190 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Voice Cloning</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
     <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --success-color: #2ecc71;
+            --warning-color: #f1c40f;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
             padding: 20px;
         }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-body {
+            padding: 25px;
+        }
+
         .recording-status {
             margin: 20px 0;
-            padding: 10px;
-            border-radius: 5px;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 500;
         }
+
         .recording {
             background-color: #ffebee;
-            color: #c62828;
+            color: var(--accent-color);
+            animation: pulse 1.5s infinite;
         }
+
         .not-recording {
             background-color: #e8f5e9;
-            color: #2e7d32;
+            color: var(--success-color);
         }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
         .audio-player {
             margin: 20px 0;
-        }
-        .provider-select {
-            margin-bottom: 20px;
-        }
-        .sample-text {
             background-color: #f8f9fa;
             padding: 15px;
-            border-radius: 5px;
+            border-radius: 10px;
+        }
+
+        .provider-select {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .sample-text {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
             margin: 15px 0;
             border: 1px solid #dee2e6;
-        }
-        .sample-text p {
-            margin-bottom: 0;
+            font-size: 1.1em;
             line-height: 1.6;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+            border-color: var(--success-color);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-control {
+            border-radius: 8px;
+            padding: 12px;
+            border: 1px solid #dee2e6;
+        }
+
+        .form-control:focus {
+            box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
+        }
+
+        .feature-badge {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            margin-right: 5px;
+        }
+
+        .progress-container {
+            margin: 20px 0;
+            display: none;
+        }
+
+        .progress {
+            height: 10px;
+            border-radius: 5px;
+        }
+
+        .voice-settings {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .voice-settings label {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .voice-settings input[type="range"] {
+            width: 100%;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1 class="mb-4">Voice Cloning</h1>
+        <div class="header">
+            <h1><i class="bi bi-mic"></i> Voice Cloning Studio</h1>
+            <p class="lead">Create, customize, and experiment with AI-powered voice cloning</p>
+        </div>
         
         <!-- Provider Selection -->
         <div class="provider-select">
-            <h5>Select TTS Provider:</h5>
+            <h5><i class="bi bi-gear"></i> Select TTS Provider:</h5>
             <div class="form-check">
                 <input class="form-check-input" type="radio" name="ttsProvider" id="openaiProvider" value="openai" checked>
                 <label class="form-check-label" for="openaiProvider">
-                    OpenAI
+                    <i class="bi bi-robot"></i> OpenAI
                 </label>
             </div>
             <div class="form-check">
                 <input class="form-check-input" type="radio" name="ttsProvider" id="elevenlabsProvider" value="elevenlabs">
                 <label class="form-check-label" for="elevenlabsProvider">
-                    ElevenLabs
+                    <i class="bi bi-music-note"></i> ElevenLabs
                 </label>
             </div>
         </div>
@@ -67,7 +196,7 @@
         <!-- Record Voice Sample -->
         <div class="card mb-4">
             <div class="card-body">
-                <h5 class="card-title">Step 1: Record Voice Sample</h5>
+                <h5 class="card-title"><i class="bi bi-mic-fill"></i> Step 1: Record Voice Sample</h5>
                 <p class="card-text">Please read the following text to create your voice sample:</p>
                 
                 <div class="sample-text">
@@ -84,12 +213,14 @@
                     </ul>
                 </div>
 
-                <button id="recordButton" class="btn btn-primary">Start Recording</button>
+                <button id="recordButton" class="btn btn-primary">
+                    <i class="bi bi-mic"></i> Start Recording
+                </button>
                 <div id="recordingStatus" class="recording-status not-recording">
-                    Not Recording
+                    <i class="bi bi-circle"></i> Not Recording
                 </div>
                 <div id="recordedAudio" class="audio-player" style="display: none;">
-                    <h6>Recorded Sample:</h6>
+                    <h6><i class="bi bi-play-circle"></i> Recorded Sample:</h6>
                     <audio id="audioPlayer" controls></audio>
                 </div>
             </div>
@@ -98,26 +229,82 @@
         <!-- Process Voice Sample -->
         <div class="card mb-4">
             <div class="card-body">
-                <h5 class="card-title">Step 2: Process Voice Sample</h5>
+                <h5 class="card-title"><i class="bi bi-gear"></i> Step 2: Process Voice Sample</h5>
                 <p class="card-text">Process the recorded voice sample to create a voice clone.</p>
-                <button id="processButton" class="btn btn-success" disabled>Process Voice Sample</button>
+                <button id="processButton" class="btn btn-success" disabled>
+                    <i class="bi bi-play"></i> Process Voice Sample
+                </button>
                 <div id="processingStatus" class="mt-3"></div>
+                <div class="progress-container" id="processingProgress">
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
+                    </div>
+                </div>
             </div>
         </div>
 
         <!-- Test Cloned Voice -->
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Step 3: Test Cloned Voice</h5>
+                <h5 class="card-title"><i class="bi bi-music-note"></i> Step 3: Test Cloned Voice</h5>
                 <p class="card-text">Generate speech using your cloned voice.</p>
+                
+                <div class="voice-settings">
+                    <div class="mb-3">
+                        <label for="voiceStyle" class="form-label">Voice Style:</label>
+                        <select class="form-select" id="voiceStyle">
+                            <option value="natural">Natural</option>
+                            <option value="energetic">Energetic</option>
+                            <option value="calm">Calm</option>
+                            <option value="professional">Professional</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="speechRate" class="form-label">Speech Rate:</label>
+                        <input type="range" class="form-range" id="speechRate" min="0.5" max="2" step="0.1" value="1">
+                        <div class="d-flex justify-content-between">
+                            <small>Slower</small>
+                            <small>Faster</small>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="mb-3">
                     <label for="testText" class="form-label">Text to Speak:</label>
                     <textarea id="testText" class="form-control" rows="3" placeholder="Enter text to convert to speech...">Hello! This is a test of your cloned voice. If you can hear this, the voice cloning was successful!</textarea>
                 </div>
-                <button id="generateButton" class="btn btn-primary" disabled>Generate Speech</button>
+                
+                <button id="generateButton" class="btn btn-primary" disabled>
+                    <i class="bi bi-play-fill"></i> Generate Speech
+                </button>
+                
                 <div id="generatedAudio" class="audio-player" style="display: none;">
-                    <h6>Generated Speech:</h6>
+                    <h6><i class="bi bi-music-note"></i> Generated Speech:</h6>
                     <audio id="generatedPlayer" controls></audio>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-stars"></i> Coming Soon Features</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <ul class="list-unstyled">
+                            <li><span class="feature-badge">New</span> Multiple Voice Styles</li>
+                            <li><span class="feature-badge">New</span> Voice Emotion Control</li>
+                            <li><span class="feature-badge">New</span> Batch Processing</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="list-unstyled">
+                            <li><span class="feature-badge">New</span> Voice Mixing</li>
+                            <li><span class="feature-badge">New</span> Export Options</li>
+                            <li><span class="feature-badge">New</span> Voice History</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -142,7 +329,7 @@
             const recordedAudio = document.getElementById('recordedAudio');
             const audioPlayer = document.getElementById('audioPlayer');
 
-            if (button.textContent === 'Start Recording') {
+            if (button.textContent.includes('Start')) {
                 try {
                     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                     mediaRecorder = new MediaRecorder(stream);
@@ -161,8 +348,8 @@
                     };
 
                     mediaRecorder.start();
-                    button.textContent = 'Stop Recording';
-                    status.textContent = 'Recording...';
+                    button.innerHTML = '<i class="bi bi-stop"></i> Stop Recording';
+                    status.innerHTML = '<i class="bi bi-record-circle"></i> Recording...';
                     status.className = 'recording-status recording';
                 } catch (err) {
                     console.error('Error accessing microphone:', err);
@@ -170,8 +357,8 @@
                 }
             } else {
                 mediaRecorder.stop();
-                button.textContent = 'Start Recording';
-                status.textContent = 'Not Recording';
+                button.innerHTML = '<i class="bi bi-mic"></i> Start Recording';
+                status.innerHTML = '<i class="bi bi-circle"></i> Not Recording';
                 status.className = 'recording-status not-recording';
             }
         });
@@ -180,6 +367,9 @@
         document.getElementById('processButton').addEventListener('click', async () => {
             const button = document.getElementById('processButton');
             const status = document.getElementById('processingStatus');
+            const progressContainer = document.getElementById('processingProgress');
+            const progressBar = progressContainer.querySelector('.progress-bar');
+            
             const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
             const formData = new FormData();
             formData.append('audio', audioBlob);
@@ -187,6 +377,15 @@
 
             button.disabled = true;
             status.innerHTML = '<div class="spinner-border text-primary" role="status"></div> Processing...';
+            progressContainer.style.display = 'block';
+            
+            // Simulate progress
+            let progress = 0;
+            const progressInterval = setInterval(() => {
+                progress += 5;
+                progressBar.style.width = `${progress}%`;
+                if (progress >= 100) clearInterval(progressInterval);
+            }, 200);
 
             try {
                 const response = await fetch('/process_voice_clone', {
@@ -196,16 +395,18 @@
                 const data = await response.json();
 
                 if (data.success) {
-                    status.innerHTML = '<div class="alert alert-success">Voice sample processed successfully!</div>';
+                    status.innerHTML = '<div class="alert alert-success"><i class="bi bi-check-circle"></i> Voice sample processed successfully!</div>';
                     document.getElementById('generateButton').disabled = false;
                 } else {
-                    status.innerHTML = `<div class="alert alert-danger">Error: ${data.error}</div>`;
+                    status.innerHTML = `<div class="alert alert-danger"><i class="bi bi-exclamation-circle"></i> Error: ${data.error}</div>`;
                 }
             } catch (err) {
                 console.error('Error processing voice sample:', err);
-                status.innerHTML = '<div class="alert alert-danger">Error processing voice sample. Please try again.</div>';
+                status.innerHTML = '<div class="alert alert-danger"><i class="bi bi-exclamation-circle"></i> Error processing voice sample. Please try again.</div>';
             }
 
+            clearInterval(progressInterval);
+            progressContainer.style.display = 'none';
             button.disabled = false;
         });
 
@@ -215,6 +416,8 @@
             const text = document.getElementById('testText').value;
             const generatedAudio = document.getElementById('generatedAudio');
             const generatedPlayer = document.getElementById('generatedPlayer');
+            const voiceStyle = document.getElementById('voiceStyle').value;
+            const speechRate = document.getElementById('speechRate').value;
 
             if (!text) {
                 alert('Please enter some text to convert to speech.');
@@ -222,7 +425,7 @@
             }
 
             button.disabled = true;
-            button.textContent = 'Generating...';
+            button.innerHTML = '<i class="bi bi-hourglass-split"></i> Generating...';
 
             try {
                 const response = await fetch('/verify_cloned_voice', {
@@ -232,19 +435,18 @@
                     },
                     body: JSON.stringify({ 
                         text: text,
-                        provider: selectedProvider  // Add the selected provider
+                        provider: selectedProvider,
+                        style: voiceStyle,
+                        rate: speechRate
                     })
                 });
                 const data = await response.json();
 
                 if (data.success) {
-                    // Add timestamp to prevent caching
                     const timestamp = new Date().getTime();
                     generatedPlayer.src = `${data.audio_url}?t=${timestamp}`;
                     generatedAudio.style.display = 'block';
-                    // Force reload of audio
                     generatedPlayer.load();
-
                 } else {
                     alert(`Error: ${data.error}`);
                 }
@@ -254,7 +456,7 @@
             }
 
             button.disabled = false;
-            button.textContent = 'Generate Speech';
+            button.innerHTML = '<i class="bi bi-play-fill"></i> Generate Speech';
         });
     </script>
 </body>

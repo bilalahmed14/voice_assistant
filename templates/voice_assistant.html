@@ -3,86 +3,342 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Voice Assistant</title>
+    <title>AI Voice Assistant</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
     <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --success-color: #2ecc71;
+            --warning-color: #f1c40f;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
         .container {
             max-width: 800px;
-            margin: 2rem auto;
-            padding: 2rem;
+            margin: 0 auto;
+            padding: 20px;
         }
-        .record-button {
-            width: 100px;
-            height: 100px;
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-container {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            height: 400px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            margin-bottom: 0;
+            padding: 12px 16px;
+            border-radius: 15px;
+            max-width: 80%;
+            position: relative;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .user-message {
+            background: var(--primary-color);
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 5px;
+        }
+
+        .assistant-message {
+            background: #f0f2f5;
+            color: var(--secondary-color);
+            margin-right: auto;
+            border-bottom-left-radius: 5px;
+        }
+
+        .message-time {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            margin-top: 5px;
+            display: block;
+        }
+
+        .message-content {
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 12px 16px;
+            background: #f0f2f5;
+            border-radius: 15px;
+            width: fit-content;
+            margin-right: auto;
+            margin-bottom: 0;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--primary-color);
             border-radius: 50%;
+            animation: typingAnimation 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typingAnimation {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-4px); }
+        }
+
+        .controls {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-record {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 2rem auto;
-            transition: transform 0.2s;
+            margin: 0 auto;
         }
-        .record-button:hover {
-            transform: scale(1.05);
+
+        .btn-record:hover {
+            transform: scale(1.1);
+            background: var(--secondary-color);
         }
-        .chat-container {
-            margin-top: 2rem;
-            max-height: 400px;
-            overflow-y: auto;
+
+        .btn-record.recording {
+            background: var(--accent-color);
+            animation: pulse 1.5s infinite;
         }
-        .message {
-            padding: 1rem;
-            margin-bottom: 1rem;
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .status {
+            text-align: center;
+            margin: 10px 0;
+            font-weight: 500;
+        }
+
+        .recording-status {
+            color: var(--accent-color);
+        }
+
+        .not-recording {
+            color: var(--success-color);
+        }
+
+        .suggestions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .suggestion-chip {
+            background: #f0f2f5;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .suggestion-chip:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .visualizer {
+            width: 100%;
+            height: 60px;
+            background: #f0f2f5;
             border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+            position: relative;
         }
-        .user-message {
-            background-color: #e3f2fd;
-            margin-left: 20%;
+
+        .visualizer-bar {
+            position: absolute;
+            bottom: 0;
+            width: 4px;
+            background: var(--primary-color);
+            border-radius: 2px;
+            animation: visualize 1s infinite;
         }
-        .assistant-message {
-            background-color: #f5f5f5;
-            margin-right: 20%;
+
+        @keyframes visualize {
+            0% { height: 10%; }
+            50% { height: 100%; }
+            100% { height: 10%; }
+        }
+
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 500;
+        }
+
+        .back-button:hover {
+            color: rgba(255, 255, 255, 0.8);
         }
     </style>
 </head>
 <body>
+    <a href="/" class="back-button">
+        <i class="bi bi-arrow-left"></i> Back to Home
+    </a>
+
     <div class="container">
-        <h1 class="text-center mb-4">Voice Assistant</h1>
-        
-        <div class="text-center">
-            <button id="recordButton" class="btn btn-primary record-button">
-                <i class="fas fa-microphone"></i>
-            </button>
-            <div id="status" class="mt-3"></div>
+        <div class="header">
+            <h1><i class="bi bi-mic"></i> AI Voice Assistant</h1>
+            <p class="lead">Your intelligent voice companion</p>
         </div>
 
         <div class="chat-container" id="chatContainer">
-            <!-- Messages will be added here dynamically -->
+            <div class="message assistant-message">
+                <div class="message-content">Hello! I'm your AI voice assistant. How can I help you today?</div>
+                <span class="message-time">Just now</span>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="visualizer" id="visualizer">
+                <!-- Visualizer bars will be added dynamically -->
+            </div>
+
+            <button class="btn-record" id="recordButton">
+                <i class="bi bi-mic"></i>
+            </button>
+
+            <div class="status" id="status">
+                <i class="bi bi-circle"></i> Not Recording
+            </div>
+
+            <div class="suggestions">
+                <div class="suggestion-chip" data-query="weather">What's the weather like?</div>
+                <div class="suggestion-chip" data-query="joke">Tell me a joke</div>
+                <div class="suggestion-chip" data-query="reminder">Set a reminder</div>
+                <div class="suggestion-chip" data-query="music">Play some music</div>
+                <div class="suggestion-chip" data-query="time">What time is it?</div>
+                <div class="suggestion-chip" data-query="help">What can you do?</div>
+            </div>
         </div>
     </div>
 
-    <script src="https://kit.fontawesome.com/your-font-awesome-kit.js"></script>
     <script>
-        const recordButton = document.getElementById('recordButton');
-        const status = document.getElementById('status');
-        const chatContainer = document.getElementById('chatContainer');
-        let isRecording = false;
         let mediaRecorder;
         let audioChunks = [];
+        const chatContainer = document.getElementById('chatContainer');
+        const recordButton = document.getElementById('recordButton');
+        const status = document.getElementById('status');
+        const visualizer = document.getElementById('visualizer');
 
-        function addMessage(text, isUser) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${isUser ? 'user-message' : 'assistant-message'}`;
-            messageDiv.textContent = text;
-            chatContainer.appendChild(messageDiv);
+        // Create visualizer bars
+        for (let i = 0; i < 20; i++) {
+            const bar = document.createElement('div');
+            bar.className = 'visualizer-bar';
+            bar.style.left = `${i * 5}%`;
+            bar.style.animationDelay = `${i * 0.1}s`;
+            visualizer.appendChild(bar);
+        }
+
+        // Add message to chat
+        function addMessage(text, sender) {
+            let displayText = (text && text.trim()) ? text.trim() : "[No message received]";
+            const message = document.createElement('div');
+            message.className = `message ${sender}-message`;
+            
+            const content = document.createElement('div');
+            content.className = 'message-content';
+            content.textContent = displayText;
+            
+            const time = document.createElement('span');
+            time.className = 'message-time';
+            time.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            message.appendChild(content);
+            message.appendChild(time);
+            chatContainer.appendChild(message);
             chatContainer.scrollTop = chatContainer.scrollHeight;
         }
 
+        // Show typing indicator
+        function showTypingIndicator() {
+            const indicator = document.createElement('div');
+            indicator.className = 'typing-indicator';
+            indicator.innerHTML = `
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            `;
+            chatContainer.appendChild(indicator);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+            return indicator;
+        }
+
+        // Record button click handler
         recordButton.addEventListener('click', async () => {
-            if (!isRecording) {
+            if (recordButton.classList.contains('recording')) {
+                mediaRecorder.stop();
+                recordButton.classList.remove('recording');
+                status.innerHTML = '<i class="bi bi-circle"></i> Processing...';
+                status.className = 'status';
+            } else {
                 try {
                     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                     mediaRecorder = new MediaRecorder(stream);
-                    
+                    audioChunks = [];
+
                     mediaRecorder.ondataavailable = (event) => {
                         audioChunks.push(event.data);
                     };
@@ -97,38 +353,107 @@
                                 method: 'POST',
                                 body: formData
                             });
-                            const result = await response.json();
-                            
-                            if (result.success) {
-                                addMessage(result.question, true);
-                                addMessage(result.answer, false);
+                            const data = await response.json();
+
+                            if (data.success) {
+                                addMessage(data.text, 'user');
                                 
-                                // Play the audio response
-                                const audio = new Audio(result.audio_url);
-                                audio.play();
+                                // Show typing indicator while waiting for response
+                                const typingIndicator = showTypingIndicator();
+                                
+                                // Simulate processing time (remove this in production)
+                                setTimeout(() => {
+                                    typingIndicator.remove();
+                                    addMessage(data.response, 'assistant');
+                                }, 1000);
                             } else {
-                                status.textContent = 'Error: ' + result.error;
+                                addMessage('Sorry, I couldn\'t process your request.', 'assistant');
                             }
-                        } catch (error) {
-                            status.textContent = 'Error uploading audio: ' + error.message;
+                        } catch (err) {
+                            console.error('Error processing voice:', err);
+                            addMessage('Sorry, there was an error processing your request.', 'assistant');
                         }
+
+                        status.innerHTML = '<i class="bi bi-circle"></i> Not Recording';
+                        status.className = 'status not-recording';
                     };
 
                     mediaRecorder.start();
-                    isRecording = true;
-                    recordButton.classList.add('btn-danger');
-                    recordButton.classList.remove('btn-primary');
-                    status.textContent = 'Recording...';
-                } catch (error) {
-                    status.textContent = 'Error accessing microphone: ' + error.message;
+                    recordButton.classList.add('recording');
+                    status.innerHTML = '<i class="bi bi-record-circle"></i> Recording...';
+                    status.className = 'status recording-status';
+                } catch (err) {
+                    console.error('Error accessing microphone:', err);
+                    alert('Error accessing microphone. Please ensure you have granted microphone permissions.');
                 }
-            } else {
-                mediaRecorder.stop();
-                isRecording = false;
-                recordButton.classList.add('btn-primary');
-                recordButton.classList.remove('btn-danger');
-                status.textContent = 'Processing...';
             }
+        });
+
+        // Suggestion chips click handler
+        document.querySelectorAll('.suggestion-chip').forEach(chip => {
+            chip.addEventListener('click', async () => {
+                const text = chip.textContent;
+                const query = chip.dataset.query;
+                
+                // Add user message
+                addMessage(text, 'user');
+                
+                // Disable all chips while processing
+                document.querySelectorAll('.suggestion-chip').forEach(c => c.style.pointerEvents = 'none');
+                
+                // Show typing indicator
+                const typingIndicator = showTypingIndicator();
+                
+                try {
+                    // Send text query to server
+                    const response = await fetch('/process_text', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ text: text, query: query })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    // Remove typing indicator
+                    typingIndicator.remove();
+                    
+                    if (data.success) {
+                        addMessage(data.response, 'assistant');
+                    } else {
+                        addMessage('Sorry, I couldn\'t process your request.', 'assistant');
+                    }
+                } catch (err) {
+                    console.error('Error processing text:', err);
+                    typingIndicator.remove();
+                    addMessage('Sorry, there was an error processing your request.', 'assistant');
+                }
+                
+                // Re-enable all chips
+                document.querySelectorAll('.suggestion-chip').forEach(c => c.style.pointerEvents = 'auto');
+            });
+        });
+
+        // Add keyboard shortcut for recording
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' && !e.repeat) {
+                e.preventDefault();
+                recordButton.click();
+            }
+        });
+
+        // Add help message when clicking the help suggestion
+        document.querySelector('.suggestion-chip[data-query="help"]').addEventListener('click', () => {
+            setTimeout(() => {
+                addMessage('I can help you with:\n' +
+                    '• Weather information\n' +
+                    '• Setting reminders\n' +
+                    '• Playing music\n' +
+                    '• Telling jokes\n' +
+                    '• And much more!\n\n' +
+                    'Just click the microphone button or press spacebar to start recording.', 'assistant');
+            }, 1000);
         });
     </script>
 </body>

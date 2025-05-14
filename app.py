@@ -91,17 +91,21 @@ def process_voice():
         
         # Convert speech to text
         text = stt.transcribe(audio_file)
+        if not text or not text.strip():
+            text = "Sorry, I couldn't hear you. Please try again."
         
         # Process question using RAG
         answer = rag_processor.get_answer(text)
+        if not answer or not answer.strip():
+            answer = "Sorry, I don't have a response for that."
         
         # Convert answer to speech
         audio_response = tts.speak(answer)
         
         return jsonify({
             'success': True,
-            'question': text,
-            'answer': answer,
+            'text': text,
+            'response': answer,
             'audio_url': audio_response
         })
     except Exception as e:
