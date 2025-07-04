@@ -1,5 +1,7 @@
 # AI Voice Assistant with Voice Cloning
 
+DEMO = https://www.linkedin.com/posts/bilalahmed384_ai-voicetechnology-machinelearning-activity-7330209998641229824-f6am?utm_source=share&utm_medium=member_desktop&rcm=ACoAADGxNmwBZ_et5WuburdmkbQWuBUF_pyd-20
+
 A powerful web application that combines an AI voice assistant with voice cloning capabilities. The application features two main components: an interactive voice assistant and a voice cloning studio.
 
 ## Features
